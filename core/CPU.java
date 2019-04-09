@@ -278,6 +278,7 @@ public class CPU
 			if(status == CPUStatus.RUNNING) {
 				if(pipe.get(PipeStatus.IF) != null) { //rispetto a dinmips scambia le load con le IF
 					try {
+						// store program counter
 						pipe.get(PipeStatus.IF).IF();
 					}
 					catch (BreakException exc) {
@@ -286,7 +287,9 @@ public class CPU
 					}
 				}
 				pipe.put(PipeStatus.ID, pipe.get(PipeStatus.IF));
+				// this line might need to change after branch not taken
 				pipe.put(PipeStatus.IF, mem.getInstruction(pc));
+				
 				old_pc.writeDoubleWord((pc.getValue()));
 				pc.writeDoubleWord((pc.getValue())+4);
 			}

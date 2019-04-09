@@ -28,29 +28,34 @@ package edumips64.core.is;
 import edumips64.core.*;
 import edumips64.utils.*;
 
-
-/**This is the base class for FlowControl instructions
+/**
+ * This is the base class for FlowControl instructions
  *
  * @author Trubia Massimo, Russo Daniele
  */
 public abstract class FlowControlInstructions extends Instruction {
-    protected static CPU cpu=CPU.getInstance();
-    public void IF()
-    {
-        Dinero din=Dinero.getInstance();
-        try
-        {
-            din.IF(Converter.binToHex(Converter.intToBin(64,cpu.getLastPC().getValue())));
-        }
-        catch(IrregularStringOfBitsException e)
-        {
-            e.printStackTrace();
-        }
-    }
-    public abstract void ID() throws RAWException,IrregularWriteOperationException,IrregularStringOfBitsException,JumpException,TwosComplementSumException;
-    public abstract void EX() throws IrregularStringOfBitsException,IntegerOverflowException,IrregularWriteOperationException;
-    public abstract void MEM() throws IrregularStringOfBitsException,MemoryElementNotFoundException;
-    public abstract void WB() throws IrregularStringOfBitsException;
-    public abstract void pack() throws IrregularStringOfBitsException;
+	protected static CPU cpu = CPU.getInstance();
+
+	public void IF() throws RAWException, IrregularWriteOperationException, IrregularStringOfBitsException,
+			JumpException, TwosComplementSumException {
+		Dinero din = Dinero.getInstance();
+		try {
+			din.IF(Converter.binToHex(Converter.intToBin(64, cpu.getLastPC().getValue())));
+		} catch (IrregularStringOfBitsException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public abstract void ID() throws RAWException, IrregularWriteOperationException, IrregularStringOfBitsException,
+			JumpException, TwosComplementSumException;
+
+	public abstract void EX()
+			throws IrregularStringOfBitsException, IntegerOverflowException, IrregularWriteOperationException;
+
+	public abstract void MEM() throws IrregularStringOfBitsException, MemoryElementNotFoundException;
+
+	public abstract void WB() throws IrregularStringOfBitsException;
+
+	public abstract void pack() throws IrregularStringOfBitsException;
 
 }
