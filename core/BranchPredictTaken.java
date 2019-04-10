@@ -24,7 +24,7 @@ public class BranchPredictTaken
                 offset = theInstruction.getParams().get(2);
             }
 
-            return offset + 4;
+            return offset;
         }
         else
         {

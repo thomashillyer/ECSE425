@@ -291,11 +291,12 @@ public class CPU
 
 				pipe.put(PipeStatus.IF, mem.getInstruction(pc));
 
+				old_pc.writeDoubleWord((pc.getValue()));
+
 				Instruction nextInstr = pipe.get(pipe.get(PipeStatus.IF));
 
 				long offset = BranchPredictTaken.getOffset(nextInstr);
 
-				old_pc.writeDoubleWord((pc.getValue()));
 				pc.writeDoubleWord((pc.getValue())+offset);
 			}
 			else
