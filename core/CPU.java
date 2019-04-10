@@ -28,6 +28,8 @@ import java.util.logging.Logger;
 import edumips64.core.is.*;
 import edumips64.utils.*;
 
+import core.BranchPredictTaken;
+
 /** This class models a MIPS CPU with 32 64-bit General Purpose Registers.
 *  @author Andrea Spadaccini, Simona Ullo, Antonella Scandura
 */
@@ -286,9 +288,15 @@ public class CPU
 					}
 				}
 				pipe.put(PipeStatus.ID, pipe.get(PipeStatus.IF));
+
 				pipe.put(PipeStatus.IF, mem.getInstruction(pc));
+
+				Instruction nextInstr = pipe.get(pipe.get(PipeStatus.IF));
+
+				long offset = BranchPredictTaken.getOffset(nextInstr);
+
 				old_pc.writeDoubleWord((pc.getValue()));
-				pc.writeDoubleWord((pc.getValue())+4);
+				pc.writeDoubleWord((pc.getValue())+offset);
 			}
 			else
 			{
