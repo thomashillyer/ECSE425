@@ -36,7 +36,7 @@ public class GUIStatistics extends GUIComponent {
 
 	StatPanel statPanel;
 	private int nCycles, nInstructions, rawStalls, codeSize, totalBranches, mispredictions;
-	private float cpi;
+	private float cpi, percentMisprediction;
 	
 	public GUIStatistics () 
 	{
@@ -46,7 +46,7 @@ public class GUIStatistics extends GUIComponent {
 
 	class StatPanel extends JPanel {
 		JList statList;
-		String [] statistics = {" Execution", " 0 Cycles", " 0 Instructions", " ", " ", " ", " Stalls", " 0 RAW Stalls", " 0 WAW Stalls",
+		String [] statistics = {" Execution", " 0 Cycles", " 0 Instructions", " ", " Percent Misprediction", " ", " Stalls", " 0 RAW Stalls", " 0 WAW Stalls",
 		       		       " 0 WAR Stalls", " 0 Structural Stalls", " 0 Branch Taken Stalls", " 0 Branch Misprediction Stalls",
 				       " ", " Code Size", " 0 Bytes"};
 		public StatPanel () 
@@ -78,6 +78,10 @@ public class GUIStatistics extends GUIComponent {
 		codeSize = (cpu.getMemory().getInstructionsNumber())*4;
 		mispredictions = cpu.getMispredictions();
 		totalBranches = cpu.getTotalBranches();
+		if(totalBranches != 0)
+		{
+			percentMisprediction = (float)mispredictions/(float)totalBranches;
+		}
 	}
 
 	public void draw ()
@@ -130,7 +134,11 @@ public class GUIStatistics extends GUIComponent {
 						label.setFont(f);
 						return label;
 					case 4:
-						label.setText(" ");
+						String floatNumber = new Float(percentMisprediction).toString();
+						if (floatNumber.length()>5)
+								floatNumber = floatNumber.substring(0, 5);
+						label.setText(" " + floatNumber + " " + CurrentLocale.getString("PM"));
+						label.setFont(f);
 						return label;
 					case 5:
 						label.setText(" ");
