@@ -46,7 +46,7 @@ public class GUIStatistics extends GUIComponent {
 
 	class StatPanel extends JPanel {
 		JList statList;
-		String [] statistics = {" Execution", " 0 Cycles", " 0 Instructions", " ", " Percent Misprediction", " ", " Stalls", " 0 RAW Stalls", " 0 WAW Stalls",
+		String [] statistics = {" Execution", " 0 Cycles", " 0 Instructions", " ", " Percent Misprediction", " Current Prediction", " Stalls", " 0 RAW Stalls", " 0 WAW Stalls",
 		       		       " 0 WAR Stalls", " 0 Structural Stalls", " 0 Branch Taken Stalls", " 0 Branch Misprediction Stalls",
 				       " ", " Code Size", " 0 Bytes"};
 		public StatPanel () 
@@ -131,7 +131,7 @@ public class GUIStatistics extends GUIComponent {
 						}
 						else
 							label.setText(" ");
-						label.setFont(f);
+							label.setFont(f);
 						return label;
 					case 4:
 						String floatNumber = new Float(percentMisprediction).toString();
@@ -141,7 +141,8 @@ public class GUIStatistics extends GUIComponent {
 						label.setFont(f);
 						return label;
 					case 5:
-						label.setText(" ");
+						label.setText(" " + cpu.getLastPrediction() + " " + CurrentLocale.getString("CP"));
+						label.setFont(f);
 						return label;
 					case 6:	
 						label.setText(" " + CurrentLocale.getString("STALLS"));

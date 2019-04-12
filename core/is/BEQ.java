@@ -60,8 +60,17 @@ public class BEQ extends FlowControl_IType {
 
         /*****Theoretically this should check if the condition is false and if so should return the PC to the point it was at before the branch
         I don't yet know if the math is correct though. Will have to check on that. ******/
-        if(!condition)
+
+        boolean branchChoice = cpu.getLastPrediction();
+
+       
+        if(!condition && !branchChoice)
         {
+             //does nothing
+        }
+        else if(!condition && branchChoice)
+        {
+            //the same as the wrong branch taken
             String pc_new=""; 
             Register pc=cpu.getPC();
             String pc_old=cpu.getPC().getBinString();
@@ -76,9 +85,57 @@ public class BEQ extends FlowControl_IType {
 
             cpu.incrementMispredictions();
 
-            throw new JumpException();
+            cpu.setLastPrediction(false);
 
+            throw new JumpException();
         }
+        else if(condition && !branchChoice)
+        {
+            //same as wrong branch not taken
+
+            String pc_new="";
+            Register pc=cpu.getPC();
+            String pc_old=cpu.getPC().getBinString();
+            
+            //subtracting 4 to the pc_old temporary variable using bitset64 safe methods
+            BitSet64 bs_temp=new BitSet64();
+            bs_temp.writeDoubleWord(-4);
+            pc_old=InstructionsUtils.twosComplementSum(pc_old,bs_temp.getBinString());
+            
+            //updating program counter
+            pc_new=InstructionsUtils.twosComplementSum(pc_old,offset);
+            pc.setBits(pc_new,0);
+
+            cpu.setLastPrediction(true);
+
+            cpu.incrementMispredictions();
+             
+            throw new JumpException(); 
+        }
+        else
+        {
+            //nothing
+        }
+
+        // if(!condition)
+        // {
+        //     String pc_new=""; 
+        //     Register pc=cpu.getPC();
+        //     String pc_old=cpu.getPC().getBinString();
+
+        //     BitSet64 bs_temp=new BitSet64();
+        //     bs_temp.writeDoubleWord(-4);
+        //     pc_old=InstructionsUtils.twosComplementSum(pc_old,bs_temp.getBinString());
+
+        //     //update the program counter
+        //     pc_new = InstructionsUtils.twosComplementSubstraction(pc_old, offset);
+        //     pc.setBits(pc_new,0);
+
+        //     cpu.incrementMispredictions();
+
+        //     throw new JumpException();
+
+        // }
         // if(condition)
         // {
         //     String pc_new="";

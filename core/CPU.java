@@ -84,6 +84,8 @@ public class CPU
 	/** Statistics */
 	private int cycles, instructions, RAWStalls, mispredictions, totalBranches; 
 
+	private boolean lastBranch = true;
+
 	/** Static initializer */
 	static {
 		cpu = null;
@@ -214,6 +216,16 @@ public class CPU
 	public void incrementMispredictions()
 	{
 		mispredictions++;
+	}
+
+	public boolean getLastPrediction()
+	{
+		return lastBranch;
+	}
+
+	public void setLastPrediction(boolean newPrediction)
+	{
+		lastBranch = newPrediction;
 	}
 
     /** This method performs a single pipeline step
@@ -410,6 +422,7 @@ public class CPU
 		RAWStalls = 0;
 		mispredictions = 0;
 		totalBranches = 0;
+		lastBranch = true;
 
 		// Reset dei registri
         for(int i = 0; i < 32; i++)
@@ -479,7 +492,7 @@ public class CPU
         //check to see if the instruction is a branch
         String instrName = theInstruction.getName();
         int offset;
-        if(instrName.equals("BEQ") || instrName.equals("BEQZ") || instrName.equals("BGEZ") || instrName.equals("BNE") || instrName.equals("BNEZ"))
+        if((instrName.equals("BEQ") || instrName.equals("BEQZ") || instrName.equals("BGEZ") || instrName.equals("BNE") || instrName.equals("BNEZ")) && lastBranch == true)
         {
 			totalBranches++;
             if( instrName.equals("BEQZ") || instrName.equals("BGEZ") || instrName.equals("BNEZ"))
@@ -495,6 +508,11 @@ public class CPU
         }
         else
         {
+			if(instrName.equals("BEQ") || instrName.equals("BEQZ") || instrName.equals("BGEZ") || instrName.equals("BNE") || instrName.equals("BNEZ"))
+			{
+				totalBranches++;
+			}
+
             return 4;
         }
     }
