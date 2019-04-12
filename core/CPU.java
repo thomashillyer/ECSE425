@@ -293,7 +293,7 @@ public class CPU
 
 				old_pc.writeDoubleWord((pc.getValue()));
 
-				Instruction nextInstr = pipe.get(pipe.get(PipeStatus.IF));
+				Instruction nextInstr = pipe.get(PipeStatus.IF);
 
 				long offset = getOffset(nextInstr);
 
@@ -471,7 +471,7 @@ public class CPU
                 offset = theInstruction.getParams().get(2);
             }
 
-            return offset;
+            return offset + 4;
         }
         else
         {
