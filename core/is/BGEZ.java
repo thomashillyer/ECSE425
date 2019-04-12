@@ -55,23 +55,41 @@ public class BGEZ extends FlowControl_IType {
         bs.writeHalf(params.get(OFFSET_FIELD));
         String offset=bs.getBinString();
         boolean condition= rs.charAt(0)=='0';
-        if(condition)
+
+        if(!condition)
         {
             String pc_new="";
             Register pc=cpu.getPC();
             String pc_old=cpu.getPC().getBinString();
             
-            //subtracting 4 to the pc_old temporary variable using bitset64 safe methods
+           //subtracting 4 to the pc_old temporary variable using bitset64 safe methods
             BitSet64 bs_temp=new BitSet64();
             bs_temp.writeDoubleWord(-4);
             pc_old=InstructionsUtils.twosComplementSum(pc_old,bs_temp.getBinString());
-            
-            //updating program counter
-            pc_new=InstructionsUtils.twosComplementSum(pc_old,offset);
+
+            //update the program counter
+            pc_new = InstructionsUtils.twosComplementSubstraction(pc_old, offset);
             pc.setBits(pc_new,0);
+
+            throw new JumpException();
+        }
+        // if(condition)
+        // {
+        //     String pc_new="";
+        //     Register pc=cpu.getPC();
+        //     String pc_old=cpu.getPC().getBinString();
+            
+        //     //subtracting 4 to the pc_old temporary variable using bitset64 safe methods
+        //     BitSet64 bs_temp=new BitSet64();
+        //     bs_temp.writeDoubleWord(-4);
+        //     pc_old=InstructionsUtils.twosComplementSum(pc_old,bs_temp.getBinString());
+            
+        //     //updating program counter
+        //     pc_new=InstructionsUtils.twosComplementSum(pc_old,offset);
+        //     pc.setBits(pc_new,0);
              
-            throw new JumpException(); 
-        }    
+        //     throw new JumpException(); 
+        // }    
     }
     public void pack() throws IrregularStringOfBitsException {
 	repr.setBits(OPCODE_VALUE, OPCODE_VALUE_INIT);

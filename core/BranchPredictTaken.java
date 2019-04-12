@@ -1,4 +1,4 @@
-package core;
+package edumips64.core;
 
 import java.util.*;
 import java.util.logging.Logger;

@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 import edumips64.core.is.*;
 import edumips64.utils.*;
 
-import core.BranchPredictTaken;
+import edumips64.core.BranchPredictTaken;
 
 /** This class models a MIPS CPU with 32 64-bit General Purpose Registers.
 *  @author Andrea Spadaccini, Simona Ullo, Antonella Scandura
@@ -295,7 +295,7 @@ public class CPU
 
 				Instruction nextInstr = pipe.get(pipe.get(PipeStatus.IF));
 
-				long offset = BranchPredictTaken.getOffset(nextInstr);
+				long offset = getOffset(nextInstr);
 
 				pc.writeDoubleWord((pc.getValue())+offset);
 			}
@@ -454,6 +454,30 @@ public class CPU
 		s += gprString();
 		return s;
 	}
+
+	public static long getOffset(Instruction theInstruction)
+    {
+        //check to see if the instruction is a branch
+        String instrName = theInstruction.getName();
+        int offset;
+        if(instrName.equals("BEQ") || instrName.equals("BEQZ") || instrName.equals("BGEZ") || instrName.equals("BNE") || instrName.equals("BNEZ"))
+        {
+            if( instrName.equals("BEQZ") || instrName.equals("BGEZ") || instrName.equals("BNEZ"))
+            {
+                offset = theInstruction.getParams().get(1);
+            }
+            else
+            {
+                offset = theInstruction.getParams().get(2);
+            }
+
+            return offset;
+        }
+        else
+        {
+            return 4;
+        }
+    }
 
 	/** Private class, representing the R0 register */
 	// TODO: DEVE IMPOSTARE I SEMAFORI?????
