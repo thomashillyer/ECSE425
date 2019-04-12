@@ -71,6 +71,8 @@ public class BGEZ extends FlowControl_IType {
             pc_new = InstructionsUtils.twosComplementSubstraction(pc_old, offset);
             pc.setBits(pc_new,0);
 
+            cpu.incrementMispredictions();
+
             throw new JumpException();
         }
         // if(condition)

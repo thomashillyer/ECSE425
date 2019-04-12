@@ -35,7 +35,7 @@ import javax.swing.*;
 public class GUIStatistics extends GUIComponent {
 
 	StatPanel statPanel;
-	private int nCycles, nInstructions, rawStalls, codeSize;
+	private int nCycles, nInstructions, rawStalls, codeSize, totalBranches, mispredictions;
 	private float cpi;
 	
 	public GUIStatistics () 
@@ -76,6 +76,8 @@ public class GUIStatistics extends GUIComponent {
 		}
 		rawStalls = cpu.getRAWStalls();
 		codeSize = (cpu.getMemory().getInstructionsNumber())*4;
+		mispredictions = cpu.getMispredictions();
+		totalBranches = cpu.getTotalBranches();
 	}
 
 	public void draw ()
@@ -162,9 +164,12 @@ public class GUIStatistics extends GUIComponent {
 						label.setFont(f);
 						return label;
 					case 12:
-						label.setText(" 0 " + CurrentLocale.getString("BMS"));
+						label.setText(" " + mispredictions + " " + CurrentLocale.getString("BMS"));
 						label.setFont(f);
 						return label;
+						// label.setText(" 0 " + CurrentLocale.getString("BMS"));
+						// label.setFont(f);
+						// return label;
 					case 13:
 						label.setText(" ");
 						return label;

@@ -82,7 +82,7 @@ public class CPU
 	private static CPU cpu;
 
 	/** Statistics */
-	private int cycles, instructions, RAWStalls; 
+	private int cycles, instructions, RAWStalls, mispredictions, totalBranches; 
 
 	/** Static initializer */
 	static {
@@ -95,6 +95,8 @@ public class CPU
 
 		logger.info("Creating the CPU...");
 		cycles = 0;
+		mispredictions = 0;
+		totalBranches = 0;
 		status = CPUStatus.READY;
 		mem = Memory.getInstance();
 		logger.info("Got Memory instance..");
@@ -197,6 +199,21 @@ public class CPU
 	 */
 	public int getRAWStalls() {
 		return RAWStalls;
+	}
+
+	public int getTotalBranches()
+	{
+		return totalBranches;
+	}
+
+	public int getMispredictions()
+	{
+		return mispredictions;
+	}
+
+	public void incrementMispredictions()
+	{
+		mispredictions++;
 	}
 
     /** This method performs a single pipeline step
@@ -391,6 +408,8 @@ public class CPU
 		cycles = 0;
 		instructions = 0;
 		RAWStalls = 0;
+		mispredictions = 0;
+		totalBranches = 0;
 
 		// Reset dei registri
         for(int i = 0; i < 32; i++)
@@ -455,13 +474,14 @@ public class CPU
 		return s;
 	}
 
-	public static long getOffset(Instruction theInstruction)
+	public long getOffset(Instruction theInstruction)
     {
         //check to see if the instruction is a branch
         String instrName = theInstruction.getName();
         int offset;
         if(instrName.equals("BEQ") || instrName.equals("BEQZ") || instrName.equals("BGEZ") || instrName.equals("BNE") || instrName.equals("BNEZ"))
         {
+			totalBranches++;
             if( instrName.equals("BEQZ") || instrName.equals("BGEZ") || instrName.equals("BNEZ"))
             {
                 offset = theInstruction.getParams().get(1);

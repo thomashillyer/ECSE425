@@ -73,7 +73,9 @@ public class BNEZ extends FlowControl_IType
 
             //update the program counter
             pc_new = InstructionsUtils.twosComplementSubstraction(pc_old, offset);
-            pc.setBits(pc_new,0);
+			pc.setBits(pc_new,0);
+			
+			cpu.incrementMispredictions();
 
             throw new JumpException();
 
